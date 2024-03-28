@@ -1,14 +1,12 @@
-import React from 'react';
-import Item from './components/item';
 import './App.css';
+import Item from './components/Item';
 
-const App = () => {
+function App() {
   return (
-    <div>
-      <h1>Мун Кирилл ИТ/2-23</h1>
-      <Item />
-    </div>
+    <form>
+      <Item/>
+    </form>
   );
-};
+}
 
 export default App;
