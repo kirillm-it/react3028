@@ -1,26 +1,49 @@
 import React, { useState } from 'react';
 
 const Item = () => {
-  const riddles = [
+  const quiz = [
     {
       id: 1,
-      description: 'Что может путешествовать по миру, оставаясь в одном и том же углу?',
-      option1: 'Почтовая марка на конверте',
-      option2: 'Портал',
-      option3: 'Сбитый GPS трекер',
-      option4: 'Метла',
-      correct: 1
+      question: 'Какой город является столицей Франции?',
+      options: [
+        'Лондон',
+        'Берлин',
+        'Париж',
+        'Мадрид'
+      ],
+      correctAnswer: 2
     },
-    // Остальные загадки...
+    {
+      id: 2,
+      question: 'Какое животное является символом мудрости во многих культурах?',
+      options: [
+        'Сова',
+        'Лиса',
+        'Волк',
+        'Корова'
+      ],
+      correctAnswer: 0
+    },
+    {
+      id: 3,
+      question: 'Какой цвет получается смешением синего и красного?',
+      options: [
+        'Желтый',
+        'Фиолетовый',
+        'Зеленый',
+        'Оранжевый'
+      ],
+      correctAnswer: 1
+    }
   ];
 
   const [answers, setAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
 
-  const handleAnswerChange = (riddleId, selectedOption) => {
+  const handleAnswerChange = (questionId, selectedAnswer) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [riddleId]: selectedOption
+      [questionId]: selectedAnswer
     }));
   };
 
@@ -28,60 +51,61 @@ const Item = () => {
     setShowResults(true);
   };
 
+  const calculateScore = () => {
+    let score = 0;
+    quiz.forEach((question) => {
+      if (answers[question.id] === question.correctAnswer) {
+        score += 1;
+      }
+    });
+    return score;
+  };
+
+  const restartQuiz = () => {
+    setAnswers({});
+    setShowResults(false);
+  };
+
   return (
     <div className='mainDiv'>
-        <h1>Мун ИТ2</h1>
-              <h2>Загадка</h2>
-      {riddles.map(riddle => (
-        <div key={riddle.id}>
-          <p className="question">{riddle.description}</p>
-          <input
-            type="radio"
-            name={riddle.id}
-            id={`${riddle.id}.1`}
-            value={1}
-            onChange={() => handleAnswerChange(riddle.id, 1)}
-          />
-          <label htmlFor={`${riddle.id}.1`}>{riddle.option1}</label><br />
-          <input
-            type="radio"
-            name={riddle.id}
-            id={`${riddle.id}.2`}
-            value={2}
-            onChange={() => handleAnswerChange(riddle.id, 2)}
-          />
-          <label htmlFor={`${riddle.id}.2`}>{riddle.option2}</label><br />
-          <input
-            type="radio"
-            name={riddle.id}
-            id={`${riddle.id}.3`}
-            value={3}
-            onChange={() => handleAnswerChange(riddle.id, 3)}
-          />
-          <label htmlFor={`${riddle.id}.3`}>{riddle.option3}</label><br />
-          <input
-            type="radio"
-            name={riddle.id}
-            id={`${riddle.id}.4`}
-            value={4}
-            onChange={() => handleAnswerChange(riddle.id, 4)}
-          />
-          <label htmlFor={`${riddle.id}.4`}>{riddle.option4}</label><br />
-
-          {showResults && answers[riddle.id] && (
-            <p className="result">
-              {answers[riddle.id] === riddle.correct
-                ? 'Верно!'
-                : `Неверно. Правильный ответ: ${riddle['option' + riddle.correct]}`}
-            </p>
-          )}
+      {!showResults ? (
+        <>
+          <h2>Викторина</h2>
+          {quiz.map((question) => (
+            <div key={question.id}>
+              <p className="question">{question.question}</p>
+              {question.options.map((option, index) => (
+                <div key={index}>
+                  <input
+                    type="radio"
+                    id={`answer-${question.id}-${index}`}
+                    name={`answer-${question.id}`}
+                    value={index}
+                    onChange={() => handleAnswerChange(question.id, index)}
+                  />
+                  <label htmlFor={`answer-${question.id}-${index}`}>{option}</label>
+                </div>
+              ))}
+            </div>
+          ))}
+          <button type="submit" className="submit" onClick={handleSubmit}>
+            Ответить
+          </button>
+        </>
+      ) : (
+        <div>
+          <h2>Результат</h2>
+          <p>Вы ответили правильно на {calculateScore()} из {quiz.length} вопросов.</p>
+          <button type="button" className="restart" onClick={restartQuiz}>
+            Пройти еще раз
+          </button>
         </div>
-      ))}
-      <button type="submit" className="submit" onClick={handleSubmit}>
-        Ответить
-      </button>
+      )}
+      <footer>
+        <p>@Мун К.В. ИТ/2-23</p>
+      </footer>
     </div>
   );
-}
+};
 
 export default Item;
