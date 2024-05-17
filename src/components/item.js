@@ -72,20 +72,22 @@ const Item = () => {
         <>
           <h2>Викторина</h2>
           {quiz.map((question) => (
-            <div key={question.id}>
+            <div key={question.id} className="question-container">
               <p className="question">{question.question}</p>
-              {question.options.map((option, index) => (
-                <div key={index}>
-                  <input
-                    type="radio"
-                    id={`answer-${question.id}-${index}`}
-                    name={`answer-${question.id}`}
-                    value={index}
-                    onChange={() => handleAnswerChange(question.id, index)}
-                  />
-                  <label htmlFor={`answer-${question.id}-${index}`}>{option}</label>
-                </div>
-              ))}
+              <div className="answerOptions">
+                {question.options.map((option, index) => (
+                  <label key={index} htmlFor={`answer-${question.id}-${index}`}>
+                    <input
+                      type="radio"
+                      id={`answer-${question.id}-${index}`}
+                      name={`answer-${question.id}`}
+                      value={index}
+                      onChange={() => handleAnswerChange(question.id, index)}
+                    />
+                    <span>{option}</span> {/* Используйте span для текста ответа */}
+                  </label>
+                ))}
+              </div>
             </div>
           ))}
           <button type="submit" className="submit" onClick={handleSubmit}>
@@ -93,7 +95,7 @@ const Item = () => {
           </button>
         </>
       ) : (
-        <div>
+        <div className="results">
           <h2>Результат</h2>
           <p>Вы ответили правильно на {calculateScore()} из {quiz.length} вопросов.</p>
           <button type="button" className="restart" onClick={restartQuiz}>
